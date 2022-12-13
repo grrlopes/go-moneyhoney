@@ -1,6 +1,7 @@
 ## Money Honey
 
-App tracks down money records as expenses and income.
+App is able to manage the financial status as expenses and income. Furthermore
+sends reports through email and make charts.
 
 ## Dependencies:
 
