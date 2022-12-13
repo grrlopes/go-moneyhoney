@@ -1,0 +1,5 @@
+package listall
+
+func NewFindAll()  {
+  
+}
