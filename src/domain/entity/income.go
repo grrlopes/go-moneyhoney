@@ -10,7 +10,7 @@ type Income struct {
 	Cost        string    `json:"cost" validate:"gte=1"`
 	Description string    `json:"description" validate:"max=200"`
 	Email       string    `json:"email" validate:"required,email"`
-	Title       string    `json:"title" validate:"min=4,max=100"`
+	Title       string    `json:"title" validate:"required,min=4,max=100"`
 	CreatedAt   time.Time `json:"-"`
 	UpdatedAt   time.Time `json:"-"`
 }
