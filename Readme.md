@@ -1,7 +1,7 @@
 ## Money Honey
 
-App is able to manage the financial status as expenses and income. Furthermore
-sends reports through email and make charts.
+App capable to manage the financial status as expenses and income. In
+additional, it sends reports by email and generate charts.
 
 ## Dependencies:
 
