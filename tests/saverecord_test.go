@@ -40,3 +40,21 @@ func TestTitleError(t *testing.T) {
 	}
 
 }
+
+func TestAuthorError(t *testing.T) {
+	income := &entity.Income{
+		Author:      "Gab",
+		Cost:        "11",
+		Description: "tttt",
+		Email:       "gabriel@gabriel.test",
+		Title:       "tttt",
+	}
+
+	err := validator.Validate(income)
+
+	if err != nil {
+		t.Log(err)
+	} else {
+		t.Fatal(err)
+	}
+}

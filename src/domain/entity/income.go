@@ -6,7 +6,7 @@ import (
 )
 
 type Income struct {
-	Author      string    `json:"author" validate:"required"`
+	Author      string    `json:"author" validate:"required,min=4,max=10"`
 	Cost        string    `json:"cost" validate:"gte=1"`
 	Description string    `json:"description" validate:"max=200"`
 	Email       string    `json:"email" validate:"required,email"`
