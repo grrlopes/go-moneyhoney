@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 
+	"github.com/go-resty/resty/v2"
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
 )
@@ -16,14 +18,29 @@ type money struct {
 
 func NewMoneyRepository() repository.IMoneyRepo {
 	return &money{}
+}
 
+func (db *money) FindAll() (entity.Income, error) {
+	client := resty.New()
+	resp, err := client.R().
+		SetHeader("Accept", "application/json").
+		SetBasicAuth(os.Getenv("USERR"), os.Getenv("PASS")).
+		Get(os.Getenv("FINDALL"))
+
+	if err != nil {
+		return entity.Income{}, err
+	}
+
+	defer client.SetCloseConnection(true)
+
+	var result entity.Income
+
+	json.Unmarshal(resp.Body(), &result)
+
+	return result, nil
 }
 
 func (db *money) Save() {
-	fmt.Println("#####")
-}
-
-func (db *money) FindAll() []entity.Income {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", "https://localhost:5498", nil)
 	if err != nil {
@@ -49,5 +66,4 @@ func (db *money) FindAll() []entity.Income {
 
 	var result []entity.Income
 	json.Unmarshal(bodyByte, &result)
-	return result
 }
