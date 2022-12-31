@@ -1,5 +1,7 @@
 package listall
 
-type Output interface {
-	output(data []string) []string
+import "github.com/grrlopes/go-moneyhoney/src/infra/presenters"
+
+type OutputBoundary interface {
+	output() []presenters.FindAllOutput
 }

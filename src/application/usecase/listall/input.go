@@ -2,6 +2,6 @@ package listall
 
 import "github.com/grrlopes/go-moneyhoney/src/domain/entity"
 
-type Input interface {
-	Execute(entity.Income)
+type InputBoundary interface {
+	Execute(entity.Income) (entity.Income, error)
 }

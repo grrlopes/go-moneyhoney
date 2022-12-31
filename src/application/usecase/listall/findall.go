@@ -1,8 +1,6 @@
 package listall
 
 import (
-	"fmt"
-
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
 )
@@ -11,14 +9,23 @@ type execute struct {
 	findRepository repository.IMoneyRepo
 }
 
-func NewFindAll(repo repository.IMoneyRepo) Input {
+func NewFindAll(repo repository.IMoneyRepo) InputBoundary {
 	return execute{
 		findRepository: repo,
 	}
 
 }
 
-func (e execute) Execute(req entity.Income) {
-	fmt.Println(req.Author)
-	e.findRepository.Save()
+func (e execute) Execute(req entity.Income) (entity.Income, error) {
+	result, err := e.findRepository.FindAll()
+
+	if err != nil {
+		return entity.Income{}, err
+	}
+
+	if result.Error != "unauthorized" {
+		return result, err
+	}
+
+	return result, nil
 }

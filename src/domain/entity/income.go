@@ -8,12 +8,12 @@ import (
 type Income struct {
 	TotalRows    int    `json:"total_rows"`
 	Offset       int    `json:"offset"`
-	Rows         []Rows `json:"rows"`
+	Rows         []rows `json:"rows"`
 	Error        string `json:"error"`
 	Reason string `json:"reason"`
 }
 
-type Rows struct {
+type rows struct {
 	ID    string `json:"id"`
 	Key   key    `json:"key"`
 	Value value  `json:"value"`
