@@ -24,8 +24,8 @@ func (db *money) FindAll() (entity.Income, error) {
 	client := resty.New()
 	resp, err := client.R().
 		SetHeader("Accept", "application/json").
-		SetBasicAuth(os.Getenv("USERR"), os.Getenv("PASS")).
-		Get(os.Getenv("FINDALL"))
+		SetBasicAuth(os.Getenv("USER"), os.Getenv("PASS")).
+		Get(os.Getenv("URL") + "/_design/list/_view/findall")
 
 	if err != nil {
 		return entity.Income{}, err
