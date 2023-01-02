@@ -13,9 +13,10 @@ make => 4.2.1
 ## ENV
 
 ```
-URL=http://exemple.local
+URL=http://example.local
 USER=admin
 PASS=123456
+MODE=prod
 ```
 
 ## Run the project:

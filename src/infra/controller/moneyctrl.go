@@ -15,9 +15,14 @@ var (
 	usecase      listall.InputBoundary = listall.NewFindAll(repositories)
 )
 
-func serverr(srv gin.Engine) gin.Engine {
+func MoneyCtrl(app gin.IRouter) {
+	app.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "No valid endpoint provided!",
+		})
+	})
 
-	srv.GET("/test", func(c *gin.Context) {
+	app.GET("/test", func(c *gin.Context) {
 
 		income := entity.Income{}
 		income.SetAuthor("xxxxx")
@@ -30,5 +35,4 @@ func serverr(srv gin.Engine) gin.Engine {
 		})
 	})
 
-  return srv
 }

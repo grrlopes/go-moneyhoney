@@ -1,35 +1,20 @@
 package main
 
 import (
-	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/grrlopes/go-moneyhoney/src/application/usecase/listall"
-	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
-	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
-	"github.com/grrlopes/go-moneyhoney/src/infra/repositories/couchdb"
-)
-
-var (
-	repositories repository.IMoneyRepo = couchdb.NewMoneyRepository()
-	usecase      listall.Input         = listall.NewFindAll(repositories)
+	"github.com/grrlopes/go-moneyhoney/src/infra/controller"
 )
 
 func main() {
-	// gin.SetMode(gin.ReleaseMode)
+	if os.Getenv("MODE") == "prod" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	server := gin.Default()
+	app := server.Group("/")
 
-	server.GET("/test", func(c *gin.Context) {
-
-		income := entity.Income{}
-		income.SetAuthor("xxxxx")
-
-		usecase.Execute(income)
-
-		c.JSON(http.StatusOK, gin.H{
-			"message": "blabla",
-		})
-	})
+	controller.MoneyCtrl(app)
 
 	server.Run()
 }
