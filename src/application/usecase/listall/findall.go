@@ -1,6 +1,8 @@
 package listall
 
 import (
+	"errors"
+
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
 )
@@ -23,8 +25,9 @@ func (e execute) Execute() (entity.Income, error) {
 		return entity.Income{}, err
 	}
 
-	if result.Error != "unauthorized" {
-		return result, err
+	if result.Error == "unauthorized" {
+		error := errors.New(result.Error)
+		return result, error
 	}
 
 	return result, nil

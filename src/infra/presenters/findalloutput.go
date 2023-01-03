@@ -10,6 +10,8 @@ type FindAllOutput struct {
 	Data      []entity.Value `json:"data"`
 }
 
+type errorOuput map[string]string
+
 func MoneySuccessResponse(data entity.Income) FindAllOutput {
 
 	mHoney := []entity.Value{}
@@ -24,4 +26,11 @@ func MoneySuccessResponse(data entity.Income) FindAllOutput {
 		Data:      mHoney,
 	}
 
+}
+
+func MoneyErrorResponse(data entity.Income) errorOuput {
+	return errorOuput{
+		"Error":   data.Error,
+		"Message": data.Reason,
+	}
 }

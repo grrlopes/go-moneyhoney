@@ -23,7 +23,13 @@ func MoneyCtrl(app gin.IRouter) {
 	})
 
 	app.GET("/findall", func(c *gin.Context) {
-		result, _ := usecase_listall.Execute()
+		result, err := usecase_listall.Execute()
+
+		if err != nil {
+			error := presenters.MoneyErrorResponse(result)
+			c.JSON(http.StatusInternalServerError, error)
+			return
+		}
 
 		data := presenters.MoneySuccessResponse(result)
 
