@@ -16,7 +16,7 @@ type Income struct {
 type rows struct {
 	ID    string `json:"id"`
 	Key   key    `json:"key"`
-	Value value  `json:"value"`
+	Value Value  `json:"value"`
 }
 
 type key struct {
@@ -29,7 +29,7 @@ type key struct {
 	Title       string `json:"Title"`
 }
 
-type value struct {
+type Value struct {
 	ID          string    `json:"id"`
 	Rev         string    `json:"rev"`
 	Author      string    `json:"author" validate:"required,min=4,max=10"`
