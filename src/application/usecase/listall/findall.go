@@ -16,7 +16,7 @@ func NewFindAll(repo repository.IMoneyRepo) InputBoundary {
 
 }
 
-func (e execute) Execute(req entity.Income) (entity.Income, error) {
+func (e execute) Execute() (entity.Income, error) {
 	result, err := e.findRepository.FindAll()
 
 	if err != nil {
