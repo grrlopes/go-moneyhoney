@@ -2,9 +2,6 @@ package couchdb
 
 import (
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
 	"os"
 
 	"github.com/go-resty/resty/v2"
@@ -40,30 +37,23 @@ func (db *money) FindAll() (entity.Income, error) {
 	return result, nil
 }
 
-func (db *money) Save() {
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", "https://localhost:5498", nil)
-	if err != nil {
-		fmt.Print(err.Error())
-	}
-
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Content-Type", "application/json")
-
-	resp, err := client.Do(req)
+func (db *money) Save(data repository.DataMap) (entity.Income, error) {
+	client := resty.New()
+	resp, err := client.R().
+		SetHeader("Accept", "application/json").
+		SetBasicAuth(os.Getenv("USER"), os.Getenv("PASS")).
+		SetBody(data).
+		Post(os.Getenv("URL"))
 
 	if err != nil {
-		fmt.Print(err.Error())
+		return entity.Income{}, err
 	}
 
-	defer resp.Body.Close()
+	defer client.SetCloseConnection(true)
 
-	bodyByte, err := ioutil.ReadAll(resp.Body)
+	var result entity.Income
 
-	if err != nil {
-		fmt.Print(err.Error())
-	}
+	json.Unmarshal(resp.Body(), &result)
 
-	var result []entity.Income
-	json.Unmarshal(bodyByte, &result)
+	return result, nil
 }
