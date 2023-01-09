@@ -2,6 +2,7 @@ package presenters
 
 import (
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
+	"github.com/grrlopes/go-moneyhoney/src/domain/validator"
 )
 
 type FindAllOutput struct {
@@ -10,7 +11,7 @@ type FindAllOutput struct {
 	Data      []entity.Value `json:"data"`
 }
 
-type errorOuput map[string]string
+type errorOuput map[string]interface{}
 
 func MoneySuccessResponse(data entity.Income) FindAllOutput {
 
@@ -25,12 +26,24 @@ func MoneySuccessResponse(data entity.Income) FindAllOutput {
 		Offset:    data.Offset,
 		Data:      mHoney,
 	}
-
 }
 
 func MoneyErrorResponse(data entity.Income) errorOuput {
 	return errorOuput{
 		"Error":   data.Error,
 		"Message": data.Reason,
+	}
+}
+
+func MoneyValidFieldResponse(data validator.FieldValidation) errorOuput {
+	mHoney := []string{}
+
+	for _, v := range data.Message {
+		mHoney = append(mHoney, v.Error())
+	}
+
+	return errorOuput{
+		"Error":   data.Error,
+		"Message": mHoney,
 	}
 }

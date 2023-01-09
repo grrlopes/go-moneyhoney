@@ -8,6 +8,7 @@ import (
 	"github.com/grrlopes/go-moneyhoney/src/application/usecase/save"
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
+	_validate "github.com/grrlopes/go-moneyhoney/src/domain/validator"
 	"github.com/grrlopes/go-moneyhoney/src/infra/presenters"
 	"github.com/grrlopes/go-moneyhoney/src/infra/repositories/couchdb"
 )
@@ -42,6 +43,14 @@ func MoneyCtrl(app gin.IRouter) {
 	app.POST("/save", func(c *gin.Context) {
 		var payload entity.Value
 		err := c.ShouldBindJSON(&payload)
+
+		validErr := _validate.Validate(&payload)
+		if validErr.Error != "" {
+			fieldErr := presenters.MoneyValidFieldResponse(validErr)
+			c.JSON(http.StatusBadRequest, fieldErr)
+			return
+		}
+
 		result, err := usecase_save.Execute(payload)
 
 		if err != nil {
