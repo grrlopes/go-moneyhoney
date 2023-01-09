@@ -44,8 +44,8 @@ func MoneyCtrl(app gin.IRouter) {
 		var payload entity.Value
 		err := c.ShouldBindJSON(&payload)
 
-		validErr := _validate.Validate(&payload)
-		if validErr.Error != "" {
+		checked, validErr := _validate.Validate(&payload)
+		if checked {
 			fieldErr := presenters.MoneyValidFieldResponse(validErr)
 			c.JSON(http.StatusBadRequest, fieldErr)
 			return

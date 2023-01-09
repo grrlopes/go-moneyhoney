@@ -21,7 +21,7 @@ type FieldValidation struct {
 	Message []error `json:"message"`
 }
 
-func Validate(e *entity.Value) (error FieldValidation) {
+func Validate(e *entity.Value) (error bool, field FieldValidation) {
 	validate := validator.New()
 
 	eng := en.New()
@@ -30,25 +30,25 @@ func Validate(e *entity.Value) (error FieldValidation) {
 	_ = en_translations.RegisterDefaultTranslations(validate, trans)
 
 	err := validate.Struct(e)
-	errs := handleError(err, trans)
+	checked, errs := handleError(err, trans)
 
 	erros := FieldValidation{
 		Error:   "Field not valid",
 		Message: errs,
 	}
 
-	return erros
+	return checked, erros
 }
 
-func handleError(err error, trans ut.Translator) (errs []error) {
+func handleError(err error, trans ut.Translator) (checked bool, fieldErr []error) {
 	if err == nil {
-		return nil
+		return false, nil
 	}
 
 	validatorErrs := err.(validator.ValidationErrors)
 	for _, e := range validatorErrs {
 		translatedErr := fmt.Errorf(e.Translate(trans))
-		errs = append(errs, translatedErr)
+		fieldErr = append(fieldErr, translatedErr)
 	}
-	return errs
+	return true, fieldErr
 }
