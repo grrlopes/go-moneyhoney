@@ -6,11 +6,11 @@ import (
 )
 
 type Income struct {
-	TotalRows    int    `json:"total_rows"`
-	Offset       int    `json:"offset"`
-	Rows         []rows `json:"rows"`
-	Error        string `json:"error"`
-	Reason string `json:"reason"`
+	TotalRows int    `json:"total_rows"`
+	Offset    int    `json:"offset"`
+	Rows      []rows `json:"rows"`
+	Error     string `json:"error"`
+	Reason    string `json:"reason"`
 }
 
 type rows struct {
@@ -39,12 +39,4 @@ type Value struct {
 	Email       string    `json:"email" validate:"required,email=200"`
 	CreatedAt   time.Time `json:"-"`
 	UpdatedAt   time.Time `json:"-"`
-}
-
-func (i *Income) SetAuthor(author string) error {
-	fmt.Println(author)
-
-	// i.Author = author
-
-	return nil
 }
