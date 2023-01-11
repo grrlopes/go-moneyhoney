@@ -25,7 +25,8 @@ func (e execute) Execute() (entity.Income, error) {
 		return entity.Income{}, err
 	}
 
-	if result.Error == "unauthorized" {
+	if result.Error == "unauthorized" ||
+		result.Error == "query_parse_error" {
 		error := errors.New(result.Error)
 		return result, error
 	}

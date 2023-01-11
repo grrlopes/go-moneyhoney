@@ -27,6 +27,16 @@ func MoneyCtrl(app gin.IRouter) {
 	})
 
 	app.GET("/findall", func(c *gin.Context) {
+		var payload entity.Pagination
+		err := c.ShouldBindJSON(&payload)
+
+		checked, validErr := _validate.Validate(&payload)
+		if checked {
+			fieldErr := presenters.MoneyValidFieldResponse(validErr)
+			c.JSON(http.StatusBadRequest, fieldErr)
+			return
+		}
+
 		result, err := usecase_listall.Execute()
 
 		if err != nil {

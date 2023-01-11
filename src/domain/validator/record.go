@@ -21,7 +21,13 @@ type FieldValidation struct {
 	Message []error `json:"message"`
 }
 
-func Validate(e *entity.Value) (error bool, field FieldValidation) {
+type _validate interface {
+	entity.Pagination |
+		entity.Value |
+		entity.Income
+}
+
+func Validate[T _validate](entity *T) (error bool, field FieldValidation) {
 	validate := validator.New()
 
 	eng := en.New()
@@ -29,7 +35,7 @@ func Validate(e *entity.Value) (error bool, field FieldValidation) {
 	trans, _ := uni.GetTranslator("en")
 	_ = en_translations.RegisterDefaultTranslations(validate, trans)
 
-	err := validate.Struct(e)
+	err := validate.Struct(entity)
 	checked, errs := handleError(err, trans)
 
 	erros := FieldValidation{

@@ -22,8 +22,11 @@ func (db *money) FindAll() (entity.Income, error) {
 	resp, err := client.R().
 		SetHeader("Accept", "application/json").
 		SetBasicAuth(os.Getenv("USER"), os.Getenv("PASS")).
+		SetQueryParams(map[string]string{
+			"limit": "1",
+			"skip":  "dfsf",
+		}).
 		Get(os.Getenv("URL") + "/_design/list/_view/findall")
-
 	if err != nil {
 		return entity.Income{}, err
 	}

@@ -39,3 +39,8 @@ type Value struct {
 	CreatedAt   time.Time `json:"-"`
 	UpdatedAt   time.Time `json:"-"`
 }
+
+type Pagination struct {
+	Limit int `json:"limit" validate:"required,gte=1,lte=50"`
+	Skip  int `json:"skip" validate:"required,gte=1,number"`
+}
