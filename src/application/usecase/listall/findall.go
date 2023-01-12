@@ -18,8 +18,8 @@ func NewFindAll(repo repository.IMoneyRepo) InputBoundary {
 
 }
 
-func (e execute) Execute() (entity.Income, error) {
-	result, err := e.findRepository.FindAll()
+func (e execute) Execute(p entity.Pagination) (entity.Income, error) {
+	result, err := e.findRepository.FindAll(p.Limit, p.Skip)
 
 	if err != nil {
 		return entity.Income{}, err

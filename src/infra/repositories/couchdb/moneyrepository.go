@@ -3,6 +3,7 @@ package couchdb
 import (
 	"encoding/json"
 	"os"
+	"strconv"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
@@ -17,14 +18,14 @@ func NewMoneyRepository() repository.IMoneyRepo {
 	return &money{}
 }
 
-func (db *money) FindAll() (entity.Income, error) {
+func (db *money) FindAll(limit, skip int) (entity.Income, error) {
 	client := resty.New()
 	resp, err := client.R().
 		SetHeader("Accept", "application/json").
 		SetBasicAuth(os.Getenv("USER"), os.Getenv("PASS")).
 		SetQueryParams(map[string]string{
-			"limit": "1",
-			"skip":  "dfsf",
+			"limit": strconv.Itoa(limit),
+			"skip":  strconv.Itoa(skip),
 		}).
 		Get(os.Getenv("URL") + "/_design/list/_view/findall")
 	if err != nil {

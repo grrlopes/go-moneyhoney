@@ -37,7 +37,7 @@ func MoneyCtrl(app gin.IRouter) {
 			return
 		}
 
-		result, err := usecase_listall.Execute()
+		result, err := usecase_listall.Execute(payload)
 
 		if err != nil {
 			error := presenters.MoneyErrorResponse(result)

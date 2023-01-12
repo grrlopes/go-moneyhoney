@@ -35,12 +35,12 @@ type Value struct {
 	Title       string    `json:"title" validate:"required,min=4,max=50"`
 	Description string    `json:"description" validate:"max=200"`
 	Cost        string    `json:"cost" validate:"gte=1"`
-	Email       string    `json:"email" validate:"required,email=200"`
+	Email       string    `json:"email" validate:"required,email"`
 	CreatedAt   time.Time `json:"-"`
 	UpdatedAt   time.Time `json:"-"`
 }
 
 type Pagination struct {
-	Limit int `json:"limit" validate:"required,gte=1,lte=50"`
-	Skip  int `json:"skip" validate:"required,gte=1,number"`
+	Limit int `json:"limit" validate:"required,gte=1,lte=50,numeric"`
+	Skip  int `json:"skip" validate:"numeric"`
 }
