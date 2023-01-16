@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/grrlopes/go-moneyhoney/src/application/usecase/listall"
+	"github.com/grrlopes/go-moneyhoney/src/application/usecase/listbyid"
 	"github.com/grrlopes/go-moneyhoney/src/application/usecase/save"
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
@@ -17,6 +18,7 @@ var (
 	repositories    repository.IMoneyRepo = couchdb.NewMoneyRepository()
 	usecase_listall listall.InputBoundary = listall.NewFindAll(repositories)
 	usecase_save    save.InputBoundary    = save.NewSave(repositories)
+	usecase_listbyid listbyid.InputBoundary = listbyid.NewFindById(repositories)
 )
 
 func MoneyCtrl(app gin.IRouter) {
@@ -49,6 +51,31 @@ func MoneyCtrl(app gin.IRouter) {
 
 		c.JSON(http.StatusOK, data)
 	})
+
+	app.POST("/findbyid", func(c *gin.Context) {
+		var payload entity.Value
+		err := c.ShouldBindJSON(&payload)
+
+		checked, validErr := _validate.Validate(&payload)
+		if checked {
+			fieldErr := presenters.MoneyValidFieldResponse(validErr)
+			c.JSON(http.StatusBadRequest, fieldErr)
+			return
+		}
+
+		result, err := usecase_listbyid.Execute(&payload)
+
+		if err != nil {
+			error := presenters.MoneyErrorResponse(result)
+			c.JSON(http.StatusInternalServerError, error)
+			return
+		}
+
+		data := presenters.MoneySuccessResponse(result)
+
+		c.JSON(http.StatusOK, data)
+	})
+
 
 	app.POST("/save", func(c *gin.Context) {
 		var payload entity.Value
