@@ -41,16 +41,12 @@ func (db *money) FindAll(limit, skip int) (entity.Income, error) {
 	return result, nil
 }
 
-func (db *money) FindById(id, rev string) (entity.Income, error) {
-	var data = map[string]string{
-		"id":  id,
-		"rev": rev,
-	}
-
+func (db *money) FindById(ids *entity.ById) (entity.Income, error) {
 	client := resty.New()
 	resp, err := client.R().
 		SetHeader("Accept", "application/json").
 		SetBasicAuth(os.Getenv("USER"), os.Getenv("PASS")).
+		SetBody(ids).
 		Post(os.Getenv("URL") + "/_design/list/_view/findall")
 	if err != nil {
 		return entity.Income{}, err

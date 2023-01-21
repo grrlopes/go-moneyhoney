@@ -18,8 +18,8 @@ func NewFindById(repo repository.IMoneyRepo) InputBoundary {
 
 }
 
-func (e execute) Execute(v *entity.Value) (entity.Income, error) {
-	result, err := e.findRepository.FindById(v.ID, v.Rev)
+func (e execute) Execute(b *entity.ById) (entity.Income, error) {
+	result, err := e.findRepository.FindById(b)
 
 	if err != nil {
 		return entity.Income{}, err

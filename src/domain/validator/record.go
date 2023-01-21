@@ -24,7 +24,8 @@ type FieldValidation struct {
 type _validate interface {
 	entity.Pagination |
 		entity.Value |
-		entity.Income
+		entity.Income |
+		entity.ById
 }
 
 func Validate[T _validate](entity *T) (error bool, field FieldValidation) {

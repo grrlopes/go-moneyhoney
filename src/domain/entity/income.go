@@ -44,3 +44,8 @@ type Pagination struct {
 	Limit int `json:"limit" validate:"required,gte=1,lte=50,numeric"`
 	Skip  int `json:"skip" validate:"numeric"`
 }
+
+type ById struct {
+	ID  string `json:"id" validate:"required"`
+	Rev string `json:"rev" validate:"required"`
+}

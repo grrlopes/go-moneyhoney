@@ -6,7 +6,7 @@ type DataMap map[string]string
 
 type IMoneyRepo interface {
 	FindAll(limit, skip int) (entity.Income, error)
-	FindById(id, rev string) (entity.Income, error)
+	FindById(ids *entity.ById) (entity.Income, error)
 	Save(data DataMap) (entity.Income, error)
 	Update(money entity.Income)
 	Delete(money entity.Income)

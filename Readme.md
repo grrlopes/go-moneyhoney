@@ -17,6 +17,7 @@ URL=http://example.local
 USER=admin
 PASS=123456
 MODE=prod
+PORT=8080
 ```
 
 ## Run the project:
