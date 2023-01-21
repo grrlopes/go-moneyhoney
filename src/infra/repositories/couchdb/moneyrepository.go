@@ -41,6 +41,30 @@ func (db *money) FindAll(limit, skip int) (entity.Income, error) {
 	return result, nil
 }
 
+func (db *money) FindById(id, rev string) (entity.Income, error) {
+	var data = map[string]string{
+		"id":  id,
+		"rev": rev,
+	}
+
+	client := resty.New()
+	resp, err := client.R().
+		SetHeader("Accept", "application/json").
+		SetBasicAuth(os.Getenv("USER"), os.Getenv("PASS")).
+		Post(os.Getenv("URL") + "/_design/list/_view/findall")
+	if err != nil {
+		return entity.Income{}, err
+	}
+
+	defer client.SetCloseConnection(true)
+
+	var result entity.Income
+
+	json.Unmarshal(resp.Body(), &result)
+
+	return result, nil
+}
+
 func (db *money) Save(data repository.DataMap) (entity.Income, error) {
 	client := resty.New()
 	resp, err := client.R().
