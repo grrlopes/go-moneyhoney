@@ -46,6 +46,6 @@ type Pagination struct {
 }
 
 type ById struct {
-	ID  string `json:"id" validate:"required"`
-	Rev string `json:"rev" validate:"required"`
+	ID  string `form:"id" validate:"required"`
+	Rev string `form:"rev"`
 }

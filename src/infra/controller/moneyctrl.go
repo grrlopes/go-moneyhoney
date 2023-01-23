@@ -54,7 +54,7 @@ func MoneyCtrl(app gin.IRouter) {
 
 	app.GET("/findbyid", func(c *gin.Context) {
 		var payload entity.ById
-		err := c.ShouldBindJSON(&payload)
+		err := c.ShouldBind(&payload)
 
 		checked, validErr := _validate.Validate(&payload)
 		if checked {
