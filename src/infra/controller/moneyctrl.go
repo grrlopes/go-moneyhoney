@@ -52,7 +52,7 @@ func MoneyCtrl(app gin.IRouter) {
 		c.JSON(http.StatusOK, data)
 	})
 
-	app.POST("/findbyid", func(c *gin.Context) {
+	app.GET("/findbyid", func(c *gin.Context) {
 		var payload entity.ById
 		err := c.ShouldBindJSON(&payload)
 

@@ -46,8 +46,12 @@ func (db *money) FindById(ids *entity.ById) (entity.Income, error) {
 	resp, err := client.R().
 		SetHeader("Accept", "application/json").
 		SetBasicAuth(os.Getenv("USER"), os.Getenv("PASS")).
-		SetBody(ids).
-		Post(os.Getenv("URL") + "/_design/list/_view/findall")
+		SetQueryParams(map[string]string{
+			"include_docs": "false",
+			"key":          `"` + ids.ID + `"`,
+		}).
+		Get(os.Getenv("URL") + "/_design/list/_view/findbyid")
+
 	if err != nil {
 		return entity.Income{}, err
 	}
@@ -57,7 +61,6 @@ func (db *money) FindById(ids *entity.ById) (entity.Income, error) {
 	var result entity.Income
 
 	json.Unmarshal(resp.Body(), &result)
-
 	return result, nil
 }
 
