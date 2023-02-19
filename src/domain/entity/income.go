@@ -33,7 +33,7 @@ type Value struct {
 	Rev       string    `json:"rev"`
 	Author    string    `json:"author" validate:"required,min=4,max=10"`
 	Email     string    `json:"email" validate:"required,email"`
-	Item      Items   `json:"Item"`
+	Item      Items     `json:"item"`
 	CreatedAt time.Time `json:"-"`
 	UpdatedAt time.Time `json:"-"`
 }
@@ -41,7 +41,7 @@ type Value struct {
 type Items struct {
 	Store       string `json:"store" validate:"required,min=4,max=10"`
 	Description string `json:"description" validate:"required,min=4,max=30"`
-	Cost        string `json:"cost" validate:"gte=1"`
+	Cost        string `json:"cost" validate:"required,gte=1"`
 }
 
 type Pagination struct {
