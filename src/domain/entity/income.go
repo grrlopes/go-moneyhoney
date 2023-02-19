@@ -33,7 +33,7 @@ type Value struct {
 	Rev       string    `json:"rev"`
 	Author    string    `json:"author" validate:"required,min=4,max=10"`
 	Email     string    `json:"email" validate:"required,email"`
-	Item      []Items   `json:"Item"`
+	Item      Items   `json:"Item"`
 	CreatedAt time.Time `json:"-"`
 	UpdatedAt time.Time `json:"-"`
 }
