@@ -29,15 +29,19 @@ type key struct {
 }
 
 type Value struct {
-	ID          string    `json:"id"`
-	Rev         string    `json:"rev"`
-	Author      string    `json:"author" validate:"required,min=4,max=10"`
-	Title       string    `json:"title" validate:"required,min=4,max=50"`
-	Description string    `json:"description" validate:"max=200"`
-	Cost        string    `json:"cost" validate:"gte=1"`
-	Email       string    `json:"email" validate:"required,email"`
-	CreatedAt   time.Time `json:"-"`
-	UpdatedAt   time.Time `json:"-"`
+	ID        string    `json:"id"`
+	Rev       string    `json:"rev"`
+	Author    string    `json:"author" validate:"required,min=4,max=10"`
+	Email     string    `json:"email" validate:"required,email"`
+	Item      []Items   `json:"Item"`
+	CreatedAt time.Time `json:"-"`
+	UpdatedAt time.Time `json:"-"`
+}
+
+type Items struct {
+	Store       string `json:"store" validate:"required,min=4,max=10"`
+	Description string `json:"description" validate:"required,min=4,max=30"`
+	Cost        string `json:"cost" validate:"gte=1"`
 }
 
 type Pagination struct {

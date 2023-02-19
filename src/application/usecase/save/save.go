@@ -21,13 +21,10 @@ func NewSave(repo repository.IMoneyRepo) InputBoundary {
 func (e execute) Execute(data entity.Value) (entity.Income, error) {
 	dataMap := repository.DataMap{
 		"Author":      data.Author,
-		"Cost":        data.Cost,
-		"Description": data.Description,
 		"Email":       data.Email,
-		"Title":       data.Title,
 	}
 
-	result, err := e.findRepository.Save(dataMap)
+	result, err := e.findRepository.Save(data)
 
 	if err != nil {
 		return entity.Income{}, err
