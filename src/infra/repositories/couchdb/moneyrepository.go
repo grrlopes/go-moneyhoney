@@ -64,7 +64,7 @@ func (db *money) FindById(ids *entity.ById) (entity.Income, error) {
 	return result, nil
 }
 
-func (db *money) Save(data entity.Value) (entity.Income, error) {
+func (db *money) Save(data *entity.Value) (entity.Income, error) {
 	client := resty.New()
 	resp, err := client.R().
 		SetHeader("Accept", "application/json").

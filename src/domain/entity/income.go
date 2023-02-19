@@ -25,7 +25,6 @@ type key struct {
 	Cost        string `json:"Cost"`
 	Description string `json:"Description"`
 	Email       string `json:"Email"`
-	Title       string `json:"Title"`
 }
 
 type Value struct {
@@ -34,8 +33,8 @@ type Value struct {
 	Author    string    `json:"author" validate:"required,min=4,max=10"`
 	Email     string    `json:"email" validate:"required,email"`
 	Item      Items     `json:"item"`
-	CreatedAt time.Time `json:"-"`
-	UpdatedAt time.Time `json:"-"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type Items struct {

@@ -2,6 +2,7 @@ package save
 
 import (
 	"errors"
+	"time"
 
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
@@ -18,7 +19,9 @@ func NewSave(repo repository.IMoneyRepo) InputBoundary {
 
 }
 
-func (e execute) Execute(data entity.Value) (entity.Income, error) {
+func (e execute) Execute(data *entity.Value) (entity.Income, error) {
+	data.CreatedAt = time.Now()
+	data.UpdatedAt = time.Now()
 
 	result, err := e.findRepository.Save(data)
 

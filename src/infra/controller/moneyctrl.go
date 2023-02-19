@@ -87,7 +87,7 @@ func MoneyCtrl(app gin.IRouter) {
 			return
 		}
 
-		result, err := usecase_save.Execute(payload)
+		result, err := usecase_save.Execute(&payload)
 
 		if err != nil {
 			error := presenters.MoneyErrorResponse(result)
