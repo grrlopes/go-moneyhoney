@@ -2,6 +2,7 @@ package couchdb
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"strconv"
 
@@ -10,12 +11,22 @@ import (
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
 )
 
+type openDB interface {
+	FindAll(limit, skip int) (entity.Income, error)
+	FindById(ids *entity.ById) (entity.Income, error)
+	Save(data *entity.Value) (entity.Income, error)
+	Update(id string, data repository.UpdateMap) (entity.Income, error)
+}
+
 type money struct {
-	repository.IMoneyRepo
+	con repository.IMoneyRepo
 }
 
 func NewMoneyRepository() repository.IMoneyRepo {
-	return &money{}
+	var db openDB
+	return &money{
+		con: db,
+	}
 }
 
 func (db *money) FindAll(limit, skip int) (entity.Income, error) {
@@ -75,6 +86,29 @@ func (db *money) Save(data *entity.Value) (entity.Income, error) {
 	if err != nil {
 		return entity.Income{}, err
 	}
+
+	defer client.SetCloseConnection(true)
+
+	var result entity.Income
+
+	json.Unmarshal(resp.Body(), &result)
+
+	return result, nil
+}
+
+func (db *money) Update(id string, data repository.UpdateMap) (entity.Income, error) {
+	client := resty.New()
+	resp, err := client.R().EnableTrace().
+		SetHeader("Accept", "application/json").
+		SetBasicAuth(os.Getenv("USER"), os.Getenv("PASS")).
+		SetBody(data).
+		Patch(os.Getenv("URL") + "/" + id)
+
+	if err != nil {
+		return entity.Income{}, err
+	}
+
+	fmt.Println(id, data)
 
 	defer client.SetCloseConnection(true)
 

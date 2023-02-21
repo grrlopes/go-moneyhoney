@@ -7,6 +7,7 @@ import (
 	"github.com/grrlopes/go-moneyhoney/src/application/usecase/listall"
 	"github.com/grrlopes/go-moneyhoney/src/application/usecase/listbyid"
 	"github.com/grrlopes/go-moneyhoney/src/application/usecase/save"
+	"github.com/grrlopes/go-moneyhoney/src/application/usecase/update"
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
 	_validate "github.com/grrlopes/go-moneyhoney/src/domain/validator"
@@ -19,6 +20,7 @@ var (
 	usecase_listall  listall.InputBoundary  = listall.NewFindAll(repositories)
 	usecase_save     save.InputBoundary     = save.NewSave(repositories)
 	usecase_listbyid listbyid.InputBoundary = listbyid.NewFindById(repositories)
+	usecase_update   update.InputBoundary   = update.NewUpdate(repositories)
 )
 
 func MoneyCtrl(app gin.IRouter) {
@@ -88,6 +90,30 @@ func MoneyCtrl(app gin.IRouter) {
 		}
 
 		result, err := usecase_save.Execute(&payload)
+
+		if err != nil {
+			error := presenters.MoneyErrorResponse(result)
+			c.JSON(http.StatusInternalServerError, error)
+			return
+		}
+
+		data := presenters.MoneySuccessResponse(result)
+
+		c.JSON(http.StatusOK, data)
+	})
+
+	app.PUT("/update", func(c *gin.Context) {
+		var payload entity.Value
+		err := c.ShouldBindJSON(&payload)
+
+		checked, validErr := _validate.Validate(&payload)
+		if checked {
+			fieldErr := presenters.MoneyValidFieldResponse(validErr)
+			c.JSON(http.StatusBadRequest, fieldErr)
+			return
+		}
+
+		result, err := usecase_update.Execute(&payload)
 
 		if err != nil {
 			error := presenters.MoneyErrorResponse(result)
