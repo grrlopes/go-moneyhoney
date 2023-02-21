@@ -102,7 +102,7 @@ func (db *money) Update(id string, data repository.UpdateMap) (entity.Income, er
 		SetHeader("Accept", "application/json").
 		SetBasicAuth(os.Getenv("USER"), os.Getenv("PASS")).
 		SetBody(data).
-		Patch(os.Getenv("URL") + "/" + id)
+		Put(os.Getenv("URL") + "/" + id)
 
 	if err != nil {
 		return entity.Income{}, err

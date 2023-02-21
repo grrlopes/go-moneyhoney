@@ -24,10 +24,11 @@ func (e execute) Execute(data *entity.Value) (entity.Income, error) {
 	id := data.ID
 
 	parseData := map[string]interface{}{
-		"_rev":    data.Rev,
-		"author": data.Author,
-		"email":  data.Email,
-		"item":   data.Item,
+		"_rev":       data.Rev,
+		"author":     data.Author,
+		"email":      data.Email,
+		"item":       data.Item,
+		"updated_at": data.UpdatedAt,
 	}
 
 	result, err := e.findRepository.Update(id, parseData)
