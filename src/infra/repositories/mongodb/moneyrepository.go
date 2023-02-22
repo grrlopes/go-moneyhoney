@@ -29,7 +29,7 @@ func NewMoneyRepository() repository.IMongoRepo {
 	}
 }
 
-func (db *money) Find(limit int, skip int) (entity.Income, error) {
+func (db *money) Find(limit int, skip int) ([]entity.Value, error) {
 	cursor, err := db.con.Find(context.TODO(), bson.M{})
 	if err != nil {
 		log.Println(err)
@@ -42,14 +42,12 @@ func (db *money) Find(limit int, skip int) (entity.Income, error) {
 
 	for _, result := range results {
 		cursor.Decode(&result)
-		output, err := json.MarshalIndent(result, "", "    ")
+		output, err := json.MarshalIndent(result, "", " ")
 		if err != nil {
 			panic(err)
 		}
 		fmt.Printf("%s\n", output)
 	}
 
-	var result entity.Income
-
-	return result, nil
+	return results, nil
 }

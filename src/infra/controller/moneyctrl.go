@@ -38,7 +38,7 @@ func MoneyCtrl(app gin.IRouter) {
 
 		checked, validErr := _validate.Validate(&payload)
 		if checked {
-			fieldErr := presenters.MoneyValidFieldResponse(validErr)
+			fieldErr := presenters.MoneyValidField(validErr)
 			c.JSON(http.StatusBadRequest, fieldErr)
 			return
 		}
@@ -46,12 +46,12 @@ func MoneyCtrl(app gin.IRouter) {
 		result, err := usecase_listall.Execute(payload)
 
 		if err != nil {
-			error := presenters.MoneyErrorResponse(result)
+			error := presenters.MoneyError(result)
 			c.JSON(http.StatusInternalServerError, error)
 			return
 		}
 
-		data := presenters.MoneySuccessResponse(result)
+		data := presenters.MoneySuccess(result)
 
 		c.JSON(http.StatusOK, data)
 	})
