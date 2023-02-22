@@ -22,7 +22,7 @@ type money struct {
 	con repository.IMoneyRepo
 }
 
-func NewMoneyRepository() repository.IMoneyRepo {
+func NewMoneyRepository() openDB {
 	var db openDB
 	return &money{
 		con: db,
