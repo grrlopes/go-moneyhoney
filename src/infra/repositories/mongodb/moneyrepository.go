@@ -2,14 +2,13 @@ package mongodb
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"log"
 
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type money struct {
@@ -29,8 +28,9 @@ func NewMoneyRepository() repository.IMongoRepo {
 	}
 }
 
-func (db *money) Find(limit int, skip int) ([]entity.Value, error) {
-	cursor, err := db.con.Find(context.TODO(), bson.M{})
+func (db *money) Find(limit int64, skip int64) ([]entity.Value, error) {
+	cursor, err := db.con.Find(context.TODO(), bson.M{},
+		options.Find().SetSkip(skip).SetLimit(limit))
 	if err != nil {
 		log.Println(err)
 	}
@@ -42,11 +42,9 @@ func (db *money) Find(limit int, skip int) ([]entity.Value, error) {
 
 	for _, result := range results {
 		cursor.Decode(&result)
-		output, err := json.MarshalIndent(result, "", " ")
 		if err != nil {
 			panic(err)
 		}
-		fmt.Printf("%s\n", output)
 	}
 
 	return results, nil
