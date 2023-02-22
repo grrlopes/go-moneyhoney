@@ -12,3 +12,7 @@ type IMoneyRepo interface {
 	Update(id string, data UpdateMap) (entity.Income, error)
 	// Delete(money entity.Income) (entity.Income, error)
 }
+
+type IMongoRepo interface {
+	Find(limit, skip int) (entity.Income, error)
+}

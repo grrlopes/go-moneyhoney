@@ -8,10 +8,10 @@ import (
 )
 
 type execute struct {
-	findRepository repository.IMoneyRepo
+	findRepository repository.IMongoRepo
 }
 
-func NewFindAll(repo repository.IMoneyRepo) InputBoundary {
+func NewFindAll(repo repository.IMongoRepo) InputBoundary {
 	return execute{
 		findRepository: repo,
 	}
@@ -19,7 +19,7 @@ func NewFindAll(repo repository.IMoneyRepo) InputBoundary {
 }
 
 func (e execute) Execute(p entity.Pagination) (entity.Income, error) {
-	result, err := e.findRepository.FindAll(p.Limit, p.Skip)
+	result, err := e.findRepository.Find(1, 1)
 
 	if err != nil {
 		return entity.Income{}, err
