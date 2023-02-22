@@ -14,5 +14,5 @@ type IMoneyRepo interface {
 }
 
 type IMongoRepo interface {
-	Find(limit, skip int64) ([]entity.Value, error)
+	Find(limit, skip int64) ([]entity.Value, entity.Count, error)
 }

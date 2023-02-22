@@ -28,10 +28,18 @@ func NewMoneyRepository() repository.IMongoRepo {
 	}
 }
 
-func (db *money) Find(limit int64, skip int64) ([]entity.Value, error) {
+func (db *money) Find(limit int64, skip int64) ([]entity.Value, entity.Count, error) {
+	count, err := db.con.CountDocuments(context.TODO(), bson.M{}, options.Count())
+	if err != nil {
+		log.Println(err)
+	}
+
+	var counts entity.Count
+	counts.Total_rows = count
+	counts.Offset = skip
+
 	cursor, err := db.con.Find(context.TODO(), bson.M{},
 		options.Find().SetSkip(skip).SetLimit(limit))
-
 	if err != nil {
 		log.Println(err)
 	}
@@ -48,5 +56,5 @@ func (db *money) Find(limit int64, skip int64) ([]entity.Value, error) {
 		}
 	}
 
-	return results, nil
+	return results, counts, nil
 }

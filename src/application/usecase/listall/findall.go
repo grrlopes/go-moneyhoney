@@ -15,12 +15,12 @@ func NewFindAll(repo repository.IMongoRepo) InputBoundary {
 	}
 }
 
-func (e execute) Execute(p entity.Pagination) ([]entity.Value, error) {
-	result, err := e.findRepository.Find(int64(p.Limit), int64(p.Skip))
+func (e execute) Execute(p entity.Pagination) ([]entity.Value, entity.Count, error) {
+	result, count, err := e.findRepository.Find(int64(p.Limit), int64(p.Skip))
 
 	if err != nil {
-		return []entity.Value{}, err
+		return []entity.Value{}, entity.Count{}, err
 	}
 
-	return result, nil
+	return result, count, nil
 }

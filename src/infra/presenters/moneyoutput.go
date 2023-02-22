@@ -11,11 +11,11 @@ type MoneyMongoOutput struct {
 	Data      []entity.Value `json:"data"`
 }
 
-func MoneySuccess(data []entity.Value) MoneyMongoOutput {
+func MoneySuccess(data []entity.Value, count entity.Count) MoneyMongoOutput {
 
 	return MoneyMongoOutput{
-		TotalRows: 0,
-		Offset:    0,
+		TotalRows: int(count.Total_rows),
+		Offset:    int(count.Offset),
 		Data:      data,
 	}
 }

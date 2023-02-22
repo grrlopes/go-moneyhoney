@@ -43,7 +43,7 @@ func MoneyCtrl(app gin.IRouter) {
 			return
 		}
 
-		result, err := usecase_listall.Execute(payload)
+		result, count, err := usecase_listall.Execute(payload)
 
 		if err != nil {
 			error := presenters.MoneyError(result)
@@ -51,7 +51,7 @@ func MoneyCtrl(app gin.IRouter) {
 			return
 		}
 
-		data := presenters.MoneySuccess(result)
+		data := presenters.MoneySuccess(result, count)
 
 		c.JSON(http.StatusOK, data)
 	})
