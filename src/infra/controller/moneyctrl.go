@@ -13,11 +13,13 @@ import (
 	_validate "github.com/grrlopes/go-moneyhoney/src/domain/validator"
 	"github.com/grrlopes/go-moneyhoney/src/infra/presenters"
 	"github.com/grrlopes/go-moneyhoney/src/infra/repositories/couchdb"
+	"github.com/grrlopes/go-moneyhoney/src/infra/repositories/mongodb"
 )
 
 var (
 	repositories     repository.IMoneyRepo  = couchdb.NewMoneyRepository()
-	usecase_listall  listall.InputBoundary  = listall.NewFindAll(repositories)
+	repositorymongo  repository.IMongoRepo  = mongodb.NewMoneyRepository()
+	usecase_listall  listall.InputBoundary  = listall.NewFindAll(repositorymongo)
 	usecase_save     save.InputBoundary     = save.NewSave(repositories)
 	usecase_listbyid listbyid.InputBoundary = listbyid.NewFindById(repositories)
 	usecase_update   update.InputBoundary   = update.NewUpdate(repositories)
