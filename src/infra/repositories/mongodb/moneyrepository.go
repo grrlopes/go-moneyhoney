@@ -31,6 +31,7 @@ func NewMoneyRepository() repository.IMongoRepo {
 func (db *money) Find(limit int64, skip int64) ([]entity.Value, error) {
 	cursor, err := db.con.Find(context.TODO(), bson.M{},
 		options.Find().SetSkip(skip).SetLimit(limit))
+
 	if err != nil {
 		log.Println(err)
 	}

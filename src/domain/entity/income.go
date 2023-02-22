@@ -28,24 +28,24 @@ type key struct {
 }
 
 type Value struct {
-	ID        string    `json:"id"`
+	ID        string    `json:"id" bson:"_id"`
 	Rev       string    `json:"rev"`
-	Author    string    `json:"author" validate:"required,min=4,max=10"`
-	Email     string    `json:"email" validate:"required,email"`
-	Item      Items     `json:"item"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+  Author    string    `json:"author" validate:"required,min=4,max=10" bson:"author"`
+  Email     string    `json:"email" validate:"required,email" bson:"email"`
+  Item      Items     `json:"item" bson:"item"`
+  CreatedAt time.Time `json:"created_at" bson:"created_at"`
+  UpdatedAt time.Time `json:"updated_at" bson:"updated_at"`
 }
 
 type Items struct {
-	Store       string `json:"store" validate:"required,min=4,max=10"`
-	Description string `json:"description" validate:"required,min=4,max=30"`
-	Cost        string `json:"cost" validate:"required,gte=1"`
+  Store       string `json:"store" validate:"required,min=4,max=10" bson:"store"`
+  Description string `json:"description" validate:"required,min=4,max=30" bson:"description"`
+  Cost        string `json:"cost" validate:"required,gte=1" bson:"cost"`
 }
 
 type Pagination struct {
-	Limit int `json:"limit" validate:"required,gte=1,lte=50,numeric"`
-	Skip  int `json:"skip" validate:"numeric"`
+  Limit int `json:"limit" validate:"required,gte=1,lte=50,numeric" bson:"limit"`
+  Skip  int `json:"skip" validate:"numeric" bson:"skip"`
 }
 
 type ById struct {
