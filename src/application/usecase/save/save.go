@@ -16,7 +16,6 @@ func NewSave(repo repository.IMoneyRepo) InputBoundary {
 	return execute{
 		findRepository: repo,
 	}
-
 }
 
 func (e execute) Execute(data *entity.Value) (entity.Income, error) {
