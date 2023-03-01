@@ -28,6 +28,7 @@ func (e execute) Execute(data *entity.Value) (entity.Income, error) {
 		"author":     data.Author,
 		"email":      data.Email,
 		"item":       data.Item,
+		"created_at": data.CreatedAt,
 		"updated_at": data.UpdatedAt,
 	}
 

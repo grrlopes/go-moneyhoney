@@ -2,6 +2,8 @@ package entity
 
 import (
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Income struct {
@@ -27,14 +29,22 @@ type key struct {
 	Email       string `json:"Email"`
 }
 
+type Users struct {
+	ID        primitive.ObjectID `json:"id" bson:"_id"`
+	Author    string             `json:"author" validate:"required,min=4,max=100" bson:"author"`
+	Email     string             `json:"email" validate:"required,email" bson:"email"`
+	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
+	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at"`
+}
+
 type Value struct {
-	ID        string    `json:"id" bson:"_id"`
-	Rev       string    `json:"rev"`
-	Author    string    `json:"author" validate:"required,min=4,max=10" bson:"author"`
-	Email     string    `json:"email" validate:"required,email" bson:"email"`
-	Item      Items     `json:"item" bson:"item"`
-	CreatedAt time.Time `json:"created_at" bson:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" bson:"updated_at"`
+	ID        primitive.ObjectID `json:"id" bson:"_id"`
+	Rev       string             `json:"rev"`
+	Author    string             `json:"author" validate:"required,min=4,max=10" bson:"author"`
+	Email     string             `json:"email" validate:"required,email" bson:"email"`
+	Item      Items              `json:"item" bson:"item"`
+	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
+	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at"`
 }
 
 type Items struct {

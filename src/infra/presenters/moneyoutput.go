@@ -8,10 +8,10 @@ import (
 type MoneyMongoOutput struct {
 	TotalRows int            `json:"total_rows"`
 	Offset    int            `json:"offset"`
-	Data      []entity.Value `json:"data"`
+	Data      []entity.Activity `json:"data"`
 }
 
-func MoneySuccess(data []entity.Value, count entity.Count) MoneyMongoOutput {
+func MoneySuccess(data []entity.Activity, count entity.Count) MoneyMongoOutput {
 
 	return MoneyMongoOutput{
 		TotalRows: int(count.Total_rows),
@@ -20,7 +20,7 @@ func MoneySuccess(data []entity.Value, count entity.Count) MoneyMongoOutput {
 	}
 }
 
-func MoneyError(data []entity.Value) errorOuput {
+func MoneyError(data []entity.Activity) errorOuput {
 	return errorOuput{
 		"Error":   data,
 		"Message": data,

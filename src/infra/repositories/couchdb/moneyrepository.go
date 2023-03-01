@@ -9,6 +9,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type openDB interface {
@@ -19,14 +20,11 @@ type openDB interface {
 }
 
 type money struct {
-	con repository.IMoneyRepo
+	repository.IMoneyRepo
 }
 
-func NewMoneyRepository() openDB {
-	var db openDB
-	return &money{
-		con: db,
-	}
+func NewMoneyRepository() repository.IMoneyRepo {
+	return &money{}
 }
 
 func (db *money) FindAll(limit, skip int) (entity.Income, error) {
@@ -96,13 +94,13 @@ func (db *money) Save(data *entity.Value) (entity.Income, error) {
 	return result, nil
 }
 
-func (db *money) Update(id string, data repository.UpdateMap) (entity.Income, error) {
+func (db *money) Update(id primitive.ObjectID, data repository.UpdateMap) (entity.Income, error) {
 	client := resty.New()
 	resp, err := client.R().EnableTrace().
 		SetHeader("Accept", "application/json").
 		SetBasicAuth(os.Getenv("USER"), os.Getenv("PASS")).
 		SetBody(data).
-		Put(os.Getenv("URL") + "/" + id)
+		Put(os.Getenv("URL") + "/" + "id")
 
 	if err != nil {
 		return entity.Income{}, err
