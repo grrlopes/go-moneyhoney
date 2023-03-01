@@ -48,9 +48,9 @@ type Value struct {
 }
 
 type Items struct {
-	Name        string `json:"store" validate:"required,min=4,max=10" bson:"name"`
+	Name        string `json:"name" validate:"required,min=4,max=10" bson:"name"`
 	Description string `json:"description" validate:"required,min=4,max=30" bson:"description"`
-	Amount      string `json:"cost" validate:"required,gte=1" bson:"amount"`
+	Amount      string `json:"amount" validate:"required,gte=1" bson:"amount"`
 }
 
 type Pagination struct {

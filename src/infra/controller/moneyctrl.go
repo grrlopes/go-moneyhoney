@@ -20,7 +20,7 @@ var (
 	repositories     repository.IMoneyRepo  = couchdb.NewMoneyRepository()
 	repositorymongo  repository.IMongoRepo  = mongodb.NewMoneyRepository()
 	usecase_listall  listall.InputBoundary  = listall.NewFindAll(repositorymongo)
-	usecase_save     save.InputBoundary     = save.NewSave(repositories)
+	usecase_save     save.InputBoundary     = save.NewSave(repositorymongo)
 	usecase_listbyid listbyid.InputBoundary = listbyid.NewFindById(repositories)
 	usecase_update   update.InputBoundary   = update.NewUpdate(repositories)
 )
@@ -81,7 +81,7 @@ func MoneyCtrl(app gin.IRouter) {
 	})
 
 	app.POST("/save", func(c *gin.Context) {
-		var payload entity.Value
+		var payload entity.Activity
 		err := c.ShouldBindJSON(&payload)
 
 		checked, validErr := _validate.Validate(&payload)

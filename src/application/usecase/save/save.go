@@ -9,16 +9,16 @@ import (
 )
 
 type execute struct {
-	findRepository repository.IMoneyRepo
+	findRepository repository.IMongoRepo
 }
 
-func NewSave(repo repository.IMoneyRepo) InputBoundary {
+func NewSave(repo repository.IMongoRepo) InputBoundary {
 	return execute{
 		findRepository: repo,
 	}
 }
 
-func (e execute) Execute(data *entity.Value) (entity.Income, error) {
+func (e execute) Execute(data *entity.Activity) (entity.Income, error) {
 	data.CreatedAt = time.Now()
 	data.UpdatedAt = time.Now()
 

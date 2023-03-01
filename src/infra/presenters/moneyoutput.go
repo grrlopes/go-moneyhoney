@@ -6,8 +6,8 @@ import (
 )
 
 type MoneyMongoOutput struct {
-	TotalRows int            `json:"total_rows"`
-	Offset    int            `json:"offset"`
+	TotalRows int               `json:"total_rows"`
+	Offset    int               `json:"offset"`
 	Data      []entity.Activity `json:"data"`
 }
 

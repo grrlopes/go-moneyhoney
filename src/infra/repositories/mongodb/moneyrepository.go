@@ -68,3 +68,41 @@ func (db *money) Find(limit int64, skip int64) ([]entity.Activity, entity.Count,
 
 	return results, counts, nil
 }
+
+func (db *money) Save(data *entity.Activity) (entity.Income, error) {
+	pipeline := bson.D{
+		{
+			Key: "user_id", Value: data.UserID,
+		},
+		{
+			Key: "item", Value: bson.D{
+				{
+					Key: "name", Value: data.Item.Name,
+				},
+				{
+					Key: "description", Value: data.Item.Description,
+				},
+				{
+					Key: "amount", Value: data.Item.Amount,
+				},
+			},
+		},
+		{
+			Key: "created_at", Value: data.CreatedAt,
+		},
+		{
+			Key: "updated_at", Value: data.UpdatedAt,
+		},
+	}
+
+	_, err := db.con.InsertOne(context.TODO(), pipeline)
+	if err != nil {
+		log.Println(err)
+		return entity.Income{}, err
+	}
+
+	var result entity.Income
+	result.Reason = "created!"
+
+	return result, err
+}

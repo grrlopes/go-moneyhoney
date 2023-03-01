@@ -25,7 +25,8 @@ type _validate interface {
 	entity.Pagination |
 		entity.Value |
 		entity.Income |
-		entity.ById
+		entity.ById |
+		entity.Activity
 }
 
 func Validate[T _validate](entity *T) (error bool, field FieldValidation) {
