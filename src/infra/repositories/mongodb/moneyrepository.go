@@ -7,6 +7,7 @@ import (
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -28,7 +29,7 @@ func NewMoneyRepository() repository.IMongoRepo {
 	}
 }
 
-func (db *money) Find(limit int64, skip int64) ([]entity.Activity, entity.Count, error) {
+func (db *money) Find(limit int64, skip int64, userId primitive.ObjectID) ([]entity.Activity, entity.Count, error) {
 	count, err := db.con.CountDocuments(context.TODO(), bson.M{}, options.Count())
 	if err != nil {
 		log.Println(err)
@@ -41,6 +42,7 @@ func (db *money) Find(limit int64, skip int64) ([]entity.Activity, entity.Count,
 	var results []entity.Activity
 
 	pipeline := bson.A{
+		bson.D{{Key: "$match", Value: bson.D{{Key: "user_id", Value: userId}}}},
 		bson.D{
 			{Key: "$lookup",
 				Value: bson.D{
@@ -59,6 +61,8 @@ func (db *money) Find(limit int64, skip int64) ([]entity.Activity, entity.Count,
 				},
 			},
 		},
+		bson.D{{Key: "$skip", Value: skip}},
+		bson.D{{Key: "$limit", Value: limit}},
 	}
 
 	cursor, err := db.con.Aggregate(context.TODO(), pipeline)

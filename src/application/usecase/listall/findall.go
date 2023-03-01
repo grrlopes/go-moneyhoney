@@ -16,7 +16,7 @@ func NewFindAll(repo repository.IMongoRepo) InputBoundary {
 }
 
 func (e execute) Execute(p entity.Pagination) ([]entity.Activity, entity.Count, error) {
-	result, count, err := e.findRepository.Find(int64(p.Limit), int64(p.Skip))
+	result, count, err := e.findRepository.Find(int64(p.Limit), int64(p.Skip), p.User_id)
 
 	if err != nil {
 		return []entity.Activity{}, entity.Count{}, err

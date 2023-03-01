@@ -54,8 +54,9 @@ type Items struct {
 }
 
 type Pagination struct {
-	Limit int `json:"limit" validate:"required,gte=1,lte=50,numeric" bson:"limit"`
-	Skip  int `json:"skip" validate:"numeric" bson:"skip"`
+	Limit   int                `json:"limit" validate:"required,gte=1,lte=50,numeric" bson:"limit"`
+	Skip    int                `json:"skip" validate:"numeric" bson:"skip"`
+	User_id primitive.ObjectID `json:"user_id" validate:"required" bson:"user_id"`
 }
 
 type Count struct {

@@ -17,6 +17,6 @@ type IMoneyRepo interface {
 }
 
 type IMongoRepo interface {
-	Find(limit, skip int64) ([]entity.Activity, entity.Count, error)
+	Find(limit, skip int64, userId primitive.ObjectID) ([]entity.Activity, entity.Count, error)
 	Save(data *entity.Activity) (entity.Income, error)
 }
