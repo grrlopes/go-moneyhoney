@@ -59,17 +59,6 @@ func (db *money) Find(limit int64, skip int64) ([]entity.Activity, entity.Count,
 				},
 			},
 		},
-		// bson.D{{Key: "$project", Value: bson.D{{Key: "_id", Value: 0}}}},
-		// bson.D{
-		// 	{Key: "$addFields",
-		// 		Value: bson.D{
-		// 			{Key: "store", Value: "$item.store"},
-		// 			{Key: "cost", Value: "$item.cost"},
-		// 			{Key: "description", Value: "$item.description"},
-		// 		},
-		// 	},
-		// },
-		// bson.D{{Key: "$unset", Value: "item"}},
 	}
 
 	cursor, err := db.con.Aggregate(context.TODO(), pipeline)
