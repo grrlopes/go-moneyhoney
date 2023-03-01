@@ -28,7 +28,7 @@ func NewMoneyRepository() repository.IMongoRepo {
 	}
 }
 
-func (db *money) Find(limit int64, skip int64) ([]entity.Value, entity.Count, error) {
+func (db *money) Find(limit int64, skip int64) ([]entity.Activity, entity.Count, error) {
 	count, err := db.con.CountDocuments(context.TODO(), bson.M{}, options.Count())
 	if err != nil {
 		log.Println(err)
@@ -38,22 +38,43 @@ func (db *money) Find(limit int64, skip int64) ([]entity.Value, entity.Count, er
 	counts.Total_rows = count
 	counts.Offset = skip
 
-	cursor, err := db.con.Find(context.TODO(), bson.M{},
-		options.Find().SetSkip(skip).SetLimit(limit))
-	if err != nil {
-		log.Println(err)
+	var results []entity.Activity
+
+	pipeline := bson.A{
+		bson.D{
+			{Key: "$lookup",
+				Value: bson.D{
+					{Key: "from", Value: "users"},
+					{Key: "localField", Value: "user_id"},
+					{Key: "foreignField", Value: "_id"},
+					{Key: "as", Value: "user"},
+				},
+			},
+		},
+		bson.D{
+			{Key: "$unwind",
+				Value: bson.D{
+					{Key: "path", Value: "$user"},
+					{Key: "preserveNullAndEmptyArrays", Value: false},
+				},
+			},
+		},
+		// bson.D{{Key: "$project", Value: bson.D{{Key: "_id", Value: 0}}}},
+		// bson.D{
+		// 	{Key: "$addFields",
+		// 		Value: bson.D{
+		// 			{Key: "store", Value: "$item.store"},
+		// 			{Key: "cost", Value: "$item.cost"},
+		// 			{Key: "description", Value: "$item.description"},
+		// 		},
+		// 	},
+		// },
+		// bson.D{{Key: "$unset", Value: "item"}},
 	}
 
-	var results []entity.Value
+	cursor, err := db.con.Aggregate(context.TODO(), pipeline)
 	if err = cursor.All(context.TODO(), &results); err != nil {
 		panic(err)
-	}
-
-	for _, result := range results {
-		cursor.Decode(&result)
-		if err != nil {
-			panic(err)
-		}
 	}
 
 	return results, counts, nil
