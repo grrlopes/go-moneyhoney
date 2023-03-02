@@ -8,6 +8,7 @@ import (
 	"github.com/grrlopes/go-moneyhoney/src/application/usecase/listbyid"
 	"github.com/grrlopes/go-moneyhoney/src/application/usecase/save"
 	"github.com/grrlopes/go-moneyhoney/src/application/usecase/update"
+	"github.com/grrlopes/go-moneyhoney/src/application/usecase/usersave"
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
 	_validate "github.com/grrlopes/go-moneyhoney/src/domain/validator"
@@ -17,12 +18,14 @@ import (
 )
 
 var (
-	repositories     repository.IMoneyRepo  = couchdb.NewMoneyRepository()
-	repositorymongo  repository.IMongoRepo  = mongodb.NewMoneyRepository()
-	usecase_listall  listall.InputBoundary  = listall.NewFindAll(repositorymongo)
-	usecase_save     save.InputBoundary     = save.NewSave(repositorymongo)
-	usecase_listbyid listbyid.InputBoundary = listbyid.NewFindById(repositories)
-	usecase_update   update.InputBoundary   = update.NewUpdate(repositories)
+	repositories       repository.IMoneyRepo  = couchdb.NewMoneyRepository()
+	repositorymongo    repository.IMongoRepo  = mongodb.NewMoneyRepository()
+	repositoryuser     repository.IMongoRepo  = mongodb.NewUserRepository()
+	usecase_listall    listall.InputBoundary  = listall.NewFindAll(repositorymongo)
+	usecase_save       save.InputBoundary     = save.NewSave(repositorymongo)
+	usecase_listbyid   listbyid.InputBoundary = listbyid.NewFindById(repositories)
+	usecase_update     update.InputBoundary   = update.NewUpdate(repositories)
+	usecase_createUser usersave.InputBoundary = usersave.NewUserSave(repositoryuser)
 )
 
 func MoneyCtrl(app gin.IRouter) {
@@ -116,6 +119,30 @@ func MoneyCtrl(app gin.IRouter) {
 		}
 
 		result, err := usecase_update.Execute(&payload)
+
+		if err != nil {
+			error := presenters.MoneyErrorResponse(result)
+			c.JSON(http.StatusInternalServerError, error)
+			return
+		}
+
+		data := presenters.MoneySuccessResponse(result)
+
+		c.JSON(http.StatusOK, data)
+	})
+
+	app.POST("/createuser", func(c *gin.Context) {
+		var payload entity.Users
+		err := c.ShouldBindJSON(&payload)
+
+		checked, validErr := _validate.Validate(&payload)
+		if checked {
+			fieldErr := presenters.MoneyValidFieldResponse(validErr)
+			c.JSON(http.StatusBadRequest, fieldErr)
+			return
+		}
+
+		result, err := usecase_createUser.Execute(&payload)
 
 		if err != nil {
 			error := presenters.MoneyErrorResponse(result)
