@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"errors"
 	"os"
 	"time"
 
@@ -9,17 +10,17 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func CreatePassword(passw *entity.Users) error {
+func CreatePassword(passw *entity.Users) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(passw.Password), 14)
 	if err != nil {
-		return err
+		return string(bytes), err
 	}
-	passw.Password = string(bytes)
-	return nil
+
+	return string(bytes), nil
 }
 
 func ValidPassword(passw *entity.Users, passwfromdb string) error {
-	err := bcrypt.CompareHashAndPassword([]byte(passw.Password), []byte(passwfromdb))
+	err := bcrypt.CompareHashAndPassword([]byte(passwfromdb), []byte(passw.Password))
 	if err != nil {
 		return err
 	}
@@ -35,6 +36,7 @@ func GenerateJwt(user *entity.Users) (string, error) {
 		Author: user.Author,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
+			IssuedAt:  time.Now().Unix(),
 		},
 	}
 
@@ -45,4 +47,32 @@ func GenerateJwt(user *entity.Users) (string, error) {
 	}
 
 	return tokenString, nil
+}
+
+func VerifyJwt(tokenString string) error {
+	token, err := jwt.ParseWithClaims(
+		tokenString,
+		&entity.Users{},
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte(os.Getenv("JWTKEY")), nil
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	if !token.Valid {
+		return errors.New("token not valid")
+	}
+
+	claims, ok := token.Claims.(*entity.Users)
+	if !ok {
+		return errors.New("couldn't parse claims")
+	}
+	if claims.ExpiresAt < time.Now().UTC().Unix() {
+		return errors.New("token is expired")
+	}
+
+	return err
 }
