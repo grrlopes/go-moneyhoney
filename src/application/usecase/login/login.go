@@ -16,27 +16,31 @@ func NewLogin(repo repository.IMongoUserRepo) InputBoundary {
 	}
 }
 
-func (e execute) Execute(data *entity.Users) (entity.Users, error) {
+func (e execute) Execute(data *entity.Users) (string, error) {
 	var token string
 	result, err := e.findRepository.FindUserByName(data)
 	if err != nil {
-		return entity.Users{}, err
+		return "", err
 	}
 
 	err = helper.ValidPassword(data, result.Password)
 	if err != nil {
-		return entity.Users{}, err
+		return "", err
 	}
+
+	data.ID = result.ID
+	data.CreatedAt = result.CreatedAt
+	data.UpdatedAt = result.UpdatedAt
 
 	token, err = helper.GenerateJwt(data)
 	if err != nil {
-		return entity.Users{}, err
+		return "", err
 	}
 
 	err = helper.VerifyJwt(token)
 	if err != nil {
-		return entity.Users{}, err
+		return "", err
 	}
 
-	return result, nil
+	return token, nil
 }

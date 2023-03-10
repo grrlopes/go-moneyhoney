@@ -2,7 +2,6 @@ package couchdb
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"strconv"
 
@@ -105,8 +104,6 @@ func (db *money) Update(id primitive.ObjectID, data repository.UpdateMap) (entit
 	if err != nil {
 		return entity.Income{}, err
 	}
-
-	fmt.Println(id, data)
 
 	defer client.SetCloseConnection(true)
 

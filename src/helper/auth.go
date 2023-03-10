@@ -32,8 +32,12 @@ func GenerateJwt(user *entity.Users) (string, error) {
 	expirationTime := time.Now().Add(1 * time.Hour)
 
 	claims := &entity.Users{
-		Email:  user.Email,
-		Author: user.Author,
+		ID:        user.ID,
+		Email:     user.Email,
+		Author:    user.Author,
+		Password:  "***",
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 			IssuedAt:  time.Now().Unix(),

@@ -2,7 +2,6 @@ package mongodb
 
 import (
 	"context"
-	"log"
 
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
@@ -48,7 +47,6 @@ func (db *users) UserSave(data *entity.Users) (entity.Income, error) {
 
 	_, err := db.con.InsertOne(context.TODO(), pipeline)
 	if err != nil {
-		log.Println(err)
 		return entity.Income{}, err
 	}
 
