@@ -2,7 +2,6 @@ package login
 
 import "github.com/grrlopes/go-moneyhoney/src/domain/entity"
 
-
 type InputBoundary interface {
-	Execute(data *entity.Users) (string, error)
+	Execute(data *entity.Users) (LoginOutput, error)
 }
