@@ -1,3 +1,3 @@
 package login
 
-type LoginOutput map[string]interface{}
+type OutputBoundary map[string]interface{}
