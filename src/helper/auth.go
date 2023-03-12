@@ -3,8 +3,10 @@ package helper
 import (
 	"errors"
 	"os"
+	"strings"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"golang.org/x/crypto/bcrypt"
@@ -29,7 +31,7 @@ func ValidPassword(passw *entity.Users, passwfromdb string) error {
 
 func GenerateJwt(user *entity.Users) (string, error) {
 	jwtKey := []byte(os.Getenv("JWTKEY"))
-	expirationTime := time.Now().Add(1 * time.Hour)
+	expirationTime := time.Now().Add(48 * time.Hour)
 
 	claims := &entity.Users{
 		ID:        user.ID,
@@ -79,4 +81,18 @@ func VerifyJwt(tokenString string) error {
 	}
 
 	return err
+}
+
+func ExtractToken(c *gin.Context) string {
+	token := c.Query("token")
+	if token != "" {
+		return token
+	}
+
+	bearerToken := c.Request.Header.Get("Authorization")
+	if len(strings.Split(bearerToken, " ")) == 2 {
+		return strings.Split(bearerToken, " ")[1]
+	}
+
+	return ""
 }

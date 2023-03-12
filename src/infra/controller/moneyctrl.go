@@ -16,6 +16,7 @@ import (
 	"github.com/grrlopes/go-moneyhoney/src/infra/presenters"
 	"github.com/grrlopes/go-moneyhoney/src/infra/repositories/couchdb"
 	"github.com/grrlopes/go-moneyhoney/src/infra/repositories/mongodb"
+	"github.com/grrlopes/go-moneyhoney/src/middleware"
 )
 
 var (
@@ -37,7 +38,7 @@ func MoneyCtrl(app gin.IRouter) {
 		})
 	})
 
-	app.GET("/findall", func(c *gin.Context) {
+	app.GET("/findall", middleware.AuthUserToken(), func(c *gin.Context) {
 		var payload entity.Pagination
 		err := c.ShouldBindJSON(&payload)
 
