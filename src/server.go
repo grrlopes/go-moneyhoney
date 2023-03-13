@@ -15,6 +15,8 @@ func main() {
 	app := server.Group("/")
 
 	routers.AuthCtrl(app)
+	routers.UserCtrl(app)
+	routers.MoneyCtrl(app)
 
 	server.Run()
 }
