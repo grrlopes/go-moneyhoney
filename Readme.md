@@ -18,6 +18,7 @@ USER=admin
 PASS=123456
 MODE=prod
 PORT=8080
+JWTKEY=secret
 ```
 
 ## Run the project:

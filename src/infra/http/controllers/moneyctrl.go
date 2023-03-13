@@ -1,4 +1,4 @@
-package controller
+package controllers
 
 import (
 	"net/http"
@@ -157,29 +157,4 @@ func MoneyCtrl(app gin.IRouter) {
 
 		c.JSON(http.StatusOK, data)
 	})
-
-	app.POST("/login", func(c *gin.Context) {
-		var payload entity.Users
-		err := c.ShouldBindJSON(&payload)
-
-		checked, validErr := _validate.Validate(&payload)
-		if checked {
-			fieldErr := presenters.LoginValidField(validErr)
-			c.JSON(http.StatusBadRequest, fieldErr)
-			return
-		}
-
-		result, err := usecase_login.Execute(&payload)
-
-		if err != nil {
-			error := presenters.LoginError(payload)
-			c.JSON(http.StatusInternalServerError, error)
-			return
-		}
-
-		data := presenters.LoginSuccess(result)
-
-		c.JSON(http.StatusOK, data)
-	})
-
 }

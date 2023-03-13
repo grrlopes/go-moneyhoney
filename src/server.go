@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/grrlopes/go-moneyhoney/src/infra/controller"
+	"github.com/grrlopes/go-moneyhoney/src/infra/http/routers"
 )
 
 func main() {
@@ -14,7 +14,7 @@ func main() {
 	server := gin.Default()
 	app := server.Group("/")
 
-	controller.MoneyCtrl(app)
+	routers.AuthCtrl(app)
 
 	server.Run()
 }
