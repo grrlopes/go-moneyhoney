@@ -14,7 +14,7 @@ import (
 
 var (
 	repositoryLogin repository.IMongoUserRepo = mongodb.NewUserRepository()
-	usecaseLogin   login.InputBoundary       = login.NewLogin(repositoryLogin)
+	usecaseLogin    login.InputBoundary       = login.NewLogin(repositoryLogin)
 )
 
 func Login() gin.HandlerFunc {

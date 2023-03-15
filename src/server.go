@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	if os.Getenv("MODE") == "Prod" {
+	if os.Getenv("MODE") != "debug" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	server := gin.Default()

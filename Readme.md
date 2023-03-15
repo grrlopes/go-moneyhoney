@@ -13,14 +13,18 @@ make => 4.2.1
 ## ENV
 
 ```
-URL=http://example.local
-USER=admin
-PASS=123456
-MODE=prod
+MONGO_URI="mongodb+srv://user:password@cluster.mongodb.net"
+SCHEMA=mastodonte
+MODE=prod or debug
 PORT=8080
 JWTKEY=secret
 ```
 
+## Run in Production
+You could run using binary related to target OS.
+https://github.com/grrlopes/go-moneyhoney/releases
+
 ## Run the project:
+Developement mode could be executed as `make dev`
 
 To run locally, use `make test` to run the tests.
