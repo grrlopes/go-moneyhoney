@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/grrlopes/go-moneyhoney/src/application/usecase/listall"
 	"github.com/grrlopes/go-moneyhoney/src/application/usecase/listbyid"
+	"github.com/grrlopes/go-moneyhoney/src/application/usecase/login"
 	"github.com/grrlopes/go-moneyhoney/src/application/usecase/save"
 	"github.com/grrlopes/go-moneyhoney/src/application/usecase/update"
 	"github.com/grrlopes/go-moneyhoney/src/application/usecase/usersave"
@@ -15,17 +16,19 @@ import (
 	"github.com/grrlopes/go-moneyhoney/src/infra/presenters"
 	"github.com/grrlopes/go-moneyhoney/src/infra/repositories/couchdb"
 	"github.com/grrlopes/go-moneyhoney/src/infra/repositories/mongodb"
+	"github.com/grrlopes/go-moneyhoney/src/middleware"
 )
 
 var (
-	repositories       repository.IMoneyRepo  = couchdb.NewMoneyRepository()
-	repositorymongo    repository.IMongoRepo  = mongodb.NewMoneyRepository()
-	repositoryuser     repository.IMongoRepo  = mongodb.NewUserRepository()
-	usecase_listall    listall.InputBoundary  = listall.NewFindAll(repositorymongo)
-	usecase_save       save.InputBoundary     = save.NewSave(repositorymongo)
-	usecase_listbyid   listbyid.InputBoundary = listbyid.NewFindById(repositories)
-	usecase_update     update.InputBoundary   = update.NewUpdate(repositories)
-	usecase_createUser usersave.InputBoundary = usersave.NewUserSave(repositoryuser)
+	repositories       repository.IMoneyRepo     = couchdb.NewMoneyRepository()
+	repositorymongo    repository.IMongoRepo     = mongodb.NewMoneyRepository()
+	repositoryuser     repository.IMongoUserRepo = mongodb.NewUserRepository()
+	usecase_listall    listall.InputBoundary     = listall.NewFindAll(repositorymongo)
+	usecase_save       save.InputBoundary        = save.NewSave(repositorymongo)
+	usecase_listbyid   listbyid.InputBoundary    = listbyid.NewFindById(repositories)
+	usecase_update     update.InputBoundary      = update.NewUpdate(repositories)
+	usecase_createUser usersave.InputBoundary    = usersave.NewUserSave(repositoryuser)
+	usecase_login      login.InputBoundary       = login.NewLogin(repositoryuser)
 )
 
 func MoneyCtrl(app gin.IRouter) {
@@ -35,7 +38,7 @@ func MoneyCtrl(app gin.IRouter) {
 		})
 	})
 
-	app.GET("/findall", func(c *gin.Context) {
+	app.GET("/findall", middleware.AuthUserToken(), func(c *gin.Context) {
 		var payload entity.Pagination
 		err := c.ShouldBindJSON(&payload)
 
@@ -151,6 +154,30 @@ func MoneyCtrl(app gin.IRouter) {
 		}
 
 		data := presenters.MoneySuccessResponse(result)
+
+		c.JSON(http.StatusOK, data)
+	})
+
+	app.POST("/login", func(c *gin.Context) {
+		var payload entity.Users
+		err := c.ShouldBindJSON(&payload)
+
+		checked, validErr := _validate.Validate(&payload)
+		if checked {
+			fieldErr := presenters.LoginValidField(validErr)
+			c.JSON(http.StatusBadRequest, fieldErr)
+			return
+		}
+
+		result, err := usecase_login.Execute(&payload)
+
+		if err != nil {
+			error := presenters.LoginError(payload)
+			c.JSON(http.StatusInternalServerError, error)
+			return
+		}
+
+		data := presenters.LoginSuccess(result)
 
 		c.JSON(http.StatusOK, data)
 	})

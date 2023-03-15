@@ -6,13 +6,14 @@ import (
 
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
+	"github.com/grrlopes/go-moneyhoney/src/helper"
 )
 
 type execute struct {
-	findRepository repository.IMongoRepo
+	findRepository repository.IMongoUserRepo
 }
 
-func NewUserSave(repo repository.IMongoRepo) InputBoundary {
+func NewUserSave(repo repository.IMongoUserRepo) InputBoundary {
 	return execute{
 		findRepository: repo,
 	}
@@ -21,6 +22,7 @@ func NewUserSave(repo repository.IMongoRepo) InputBoundary {
 func (e execute) Execute(data *entity.Users) (entity.Income, error) {
 	data.CreatedAt = time.Now()
 	data.UpdatedAt = time.Now()
+	data.Password, _ = helper.CreatePassword(data)
 
 	result, err := e.findRepository.UserSave(data)
 

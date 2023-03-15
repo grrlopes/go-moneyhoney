@@ -2,7 +2,6 @@ package mongodb
 
 import (
 	"context"
-	"log"
 
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
@@ -14,7 +13,7 @@ type users struct {
 	con *mongo.Collection
 }
 
-func NewUserRepository() repository.IMongoRepo {
+func NewUserRepository() repository.IMongoUserRepo {
 	err := OpenDB()
 	if err != nil {
 		panic(err)
@@ -22,18 +21,21 @@ func NewUserRepository() repository.IMongoRepo {
 
 	db := GetDBCollection("users")
 
-	return &money{
+	return &users{
 		con: db,
 	}
 }
 
-func (db *money) UserSave(data *entity.Users) (entity.Income, error) {
+func (db *users) UserSave(data *entity.Users) (entity.Income, error) {
 	pipeline := bson.D{
 		{
 			Key: "author", Value: data.Author,
 		},
 		{
 			Key: "email", Value: data.Email,
+		},
+		{
+			Key: "password", Value: data.Password,
 		},
 		{
 			Key: "created_at", Value: data.CreatedAt,
@@ -45,7 +47,6 @@ func (db *money) UserSave(data *entity.Users) (entity.Income, error) {
 
 	_, err := db.con.InsertOne(context.TODO(), pipeline)
 	if err != nil {
-		log.Println(err)
 		return entity.Income{}, err
 	}
 
@@ -53,4 +54,17 @@ func (db *money) UserSave(data *entity.Users) (entity.Income, error) {
 	result.Reason = "created!"
 
 	return result, err
+}
+
+func (db *users) FindUserByName(user *entity.Users) (entity.Users, error) {
+	var result entity.Users
+	err := db.con.FindOne(context.TODO(), bson.D{{
+		Key:   "author",
+		Value: user.Author,
+	}}).Decode(&result)
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
 }
