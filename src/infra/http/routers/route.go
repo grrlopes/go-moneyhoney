@@ -26,4 +26,5 @@ func MoneyCtrl(app gin.IRouter) {
 	app.GET("/findall", middleware.AuthUserToken(), controllers.FindAll())
 	app.GET("/findbyid", controllers.FindById())
 	app.POST("/update", controllers.Update())
+	app.POST("/save", controllers.Save())
 }

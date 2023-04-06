@@ -1,34 +1,26 @@
 package listbyid
 
 import (
-	"errors"
-
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
 )
 
 type execute struct {
-	findRepository repository.IMoneyRepo
+	findRepository repository.IMongoRepo
 }
 
-func NewFindById(repo repository.IMoneyRepo) InputBoundary {
+func NewFindById(repo repository.IMongoRepo) InputBoundary {
 	return execute{
 		findRepository: repo,
 	}
 
 }
 
-func (e execute) Execute(b *entity.ById) (entity.Income, error) {
+func (e execute) Execute(b *entity.ById) ([]entity.Activity, error) {
 	result, err := e.findRepository.FindById(b)
 
 	if err != nil {
-		return entity.Income{}, err
-	}
-
-	if result.Error == "unauthorized" ||
-		result.Error == "query_parse_error" {
-		error := errors.New(result.Error)
-		return result, error
+		return []entity.Activity{}, err
 	}
 
 	return result, nil

@@ -21,7 +21,7 @@ var (
 	repositorymongo repository.IMongoRepo  = mongodb.NewMoneyRepository()
 	usecaseListall  listall.InputBoundary  = listall.NewFindAll(repositorymongo)
 	usecaseSave     save.InputBoundary     = save.NewSave(repositorymongo)
-	usecaseListbyid listbyid.InputBoundary = listbyid.NewFindById(repositories)
+	usecaseListbyid listbyid.InputBoundary = listbyid.NewFindById(repositorymongo)
 	usecaseUpdate   update.InputBoundary   = update.NewUpdate(repositories)
 )
 
@@ -66,12 +66,12 @@ func FindById() gin.HandlerFunc {
 		result, err := usecaseListbyid.Execute(&payload)
 
 		if err != nil {
-			error := presenters.MoneyErrorResponse(result)
+			error := presenters.MoneyError(result)
 			c.JSON(http.StatusInternalServerError, error)
 			return
 		}
 
-		data := presenters.MoneySuccessResponse(result)
+		data := presenters.MoneySuccess(result, entity.Count{})
 
 		c.JSON(http.StatusOK, data)
 	}

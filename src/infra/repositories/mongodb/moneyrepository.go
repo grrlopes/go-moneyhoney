@@ -110,3 +110,38 @@ func (db *money) Save(data *entity.Activity) (entity.Income, error) {
 
 	return result, err
 }
+
+func (db *money) FindById(Id *entity.ById) ([]entity.Activity, error) {
+	var results []entity.Activity
+	p, _ := primitive.ObjectIDFromHex(string(Id.ID))
+
+	pipeline := bson.A{
+		bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: p}}}},
+		bson.D{
+			{Key: "$lookup",
+				Value: bson.D{
+					{Key: "from", Value: "users"},
+					{Key: "localField", Value: "user_id"},
+					{Key: "foreignField", Value: "_id"},
+					{Key: "as", Value: "user"},
+				},
+			},
+		},
+		bson.D{
+			{Key: "$unwind",
+				Value: bson.D{
+					{Key: "path", Value: "$user"},
+					{Key: "preserveNullAndEmptyArrays", Value: false},
+				},
+			},
+		},
+	}
+
+	cursor, err := db.con.Aggregate(context.TODO(), pipeline)
+	if err = cursor.All(context.TODO(), &results); err != nil {
+		panic(err)
+	}
+
+	return results, nil
+
+}
