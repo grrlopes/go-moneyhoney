@@ -32,8 +32,8 @@ func Login() gin.HandlerFunc {
 		result, err := usecaseLogin.Execute(&payload)
 
 		if err != nil {
-			error := presenters.LoginError(payload)
-			c.JSON(http.StatusInternalServerError, error)
+			error := presenters.LoginError(err)
+			c.JSON(http.StatusUnauthorized, error)
 			return
 		}
 

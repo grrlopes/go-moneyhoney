@@ -1,6 +1,9 @@
 package login
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
 	"github.com/grrlopes/go-moneyhoney/src/helper"
@@ -20,12 +23,13 @@ func (e execute) Execute(data *entity.Users) (OutputBoundary, error) {
 	var token string
 	result, err := e.findRepository.FindUserByName(data)
 	if err != nil {
-		return OutputBoundary{}, err
+		return OutputBoundary{}, errors.New("Incorrect username or password.")
 	}
 
+	fmt.Println(err, "dsfsdfds")
 	err = helper.ValidPassword(data, result.Password)
 	if err != nil {
-		return OutputBoundary{}, err
+		return OutputBoundary{}, errors.New("Incorrect username or password.")
 	}
 
 	data.ID = result.ID

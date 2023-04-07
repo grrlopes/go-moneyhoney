@@ -1,7 +1,6 @@
 package presenters
 
 import (
-	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/validator"
 )
 
@@ -9,16 +8,20 @@ type LoginMongoOutput struct {
 	Data map[string]interface{} `json:"data"`
 }
 
+type data map[string]interface{}
+
 func LoginSuccess(data map[string]interface{}) LoginMongoOutput {
 	return LoginMongoOutput{
 		Data: data,
 	}
 }
 
-func LoginError(data entity.Users) errorOuput {
+func LoginError(err error) errorOuput {
 	return errorOuput{
-		"Error":   data,
-		"Message": data,
+		"message": "Unauthorized",
+		"data": data{
+			"error": err.Error(),
+		},
 	}
 }
 
