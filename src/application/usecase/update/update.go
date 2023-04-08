@@ -1,7 +1,7 @@
 package update
 
 import (
-	"errors"
+	"log"
 	"time"
 
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
@@ -9,38 +9,33 @@ import (
 )
 
 type execute struct {
-	findRepository repository.IMoneyRepo
+	findRepository repository.IMongoRepo
 }
 
-func NewUpdate(repo repository.IMoneyRepo) InputBoundary {
+func NewUpdate(repo repository.IMongoRepo) InputBoundary {
 	return execute{
 		findRepository: repo,
 	}
 
 }
 
-func (e execute) Execute(data *entity.Value) (entity.Income, error) {
+func (e execute) Execute(data *entity.Activity) ([]entity.Activity, error) {
 	data.UpdatedAt = time.Now()
 	id := data.ID
 
 	parseData := map[string]interface{}{
-		"_rev":       data.Rev,
-		"author":     data.Author,
-		"email":      data.Email,
+		"author":     data.User,
 		"item":       data.Item,
 		"created_at": data.CreatedAt,
 		"updated_at": data.UpdatedAt,
 	}
 
-	result, err := e.findRepository.Update(id, parseData)
+  log.Println(parseData)
+
+	result, err := e.findRepository.Update(id, data)
 
 	if err != nil {
-		return entity.Income{}, err
-	}
-
-	if result.Error == "unauthorized" {
-		error := errors.New(result.Error)
-		return result, error
+		return []entity.Activity{}, err
 	}
 
 	return result, nil

@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"errors"
 	"log"
 
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
@@ -144,4 +145,8 @@ func (db *money) FindById(Id *entity.ById) ([]entity.Activity, error) {
 
 	return results, nil
 
+}
+
+func (db *money) Update(id primitive.ObjectID, data *entity.Activity) ([]entity.Activity, error) {
+	return []entity.Activity{}, errors.New("")
 }

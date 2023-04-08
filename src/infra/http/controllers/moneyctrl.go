@@ -22,7 +22,7 @@ var (
 	usecaseListall  listall.InputBoundary  = listall.NewFindAll(repositorymongo)
 	usecaseSave     save.InputBoundary     = save.NewSave(repositorymongo)
 	usecaseListbyid listbyid.InputBoundary = listbyid.NewFindById(repositorymongo)
-	usecaseUpdate   update.InputBoundary   = update.NewUpdate(repositories)
+	usecaseUpdate   update.InputBoundary   = update.NewUpdate(repositorymongo)
 )
 
 func FindAll() gin.HandlerFunc {
@@ -105,7 +105,7 @@ func Save() gin.HandlerFunc {
 
 func Update() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var payload entity.Value
+		var payload entity.Activity
 		err := c.ShouldBindJSON(&payload)
 
 		checked, validErr := _validate.Validate(&payload)
@@ -118,12 +118,12 @@ func Update() gin.HandlerFunc {
 		result, err := usecaseUpdate.Execute(&payload)
 
 		if err != nil {
-			error := presenters.MoneyErrorResponse(result)
+			error := presenters.MoneyError(result)
 			c.JSON(http.StatusInternalServerError, error)
 			return
 		}
 
-		data := presenters.MoneySuccessResponse(result)
+		data := presenters.MoneySuccess(result, entity.Count{})
 
 		c.JSON(http.StatusOK, data)
 	}
