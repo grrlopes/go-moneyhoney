@@ -20,5 +20,5 @@ type IMongoRepo interface {
 	Find(limit, skip int64, userId primitive.ObjectID) ([]entity.Activity, entity.Count, error)
 	Save(data *entity.Activity) (entity.Income, error)
 	FindById(id *entity.ById) ([]entity.Activity, error)
-	Update(id primitive.ObjectID, data *entity.Activity) ([]entity.Activity, error)
+	Update(id primitive.ObjectID, data *entity.Activity) (int64, error)
 }

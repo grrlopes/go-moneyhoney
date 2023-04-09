@@ -146,35 +146,35 @@ func (db *money) FindById(Id *entity.ById) ([]entity.Activity, error) {
 
 }
 
-func (db *money) Update(id primitive.ObjectID, data *entity.Activity) ([]entity.Activity, error) {
+func (db *money) Update(id primitive.ObjectID, data *entity.Activity) (int64, error) {
 	_id := bson.D{{Key: "_id", Value: id}}
 	pipeline := bson.D{
 		{
-			Key: "item", Value: bson.D{
+			Key: "$set", Value: bson.D{
 				{
-					Key: "name", Value: data.Item.Name,
+					Key: "item", Value: bson.D{
+						{
+							Key: "name", Value: data.Item.Name,
+						},
+						{
+							Key: "description", Value: data.Item.Description,
+						},
+						{
+							Key: "amount", Value: data.Item.Amount,
+						},
+					},
 				},
 				{
-					Key: "description", Value: data.Item.Description,
-				},
-				{
-					Key: "amount", Value: data.Item.Amount,
+					Key: "updated_at", Value: data.UpdatedAt,
 				},
 			},
 		},
-		{
-			Key: "updated_at", Value: data.UpdatedAt,
-		},
 	}
 
-	_, err := db.con.UpdateOne(context.TODO(), _id, pipeline)
+	result, err := db.con.UpdateOne(context.TODO(), _id, pipeline)
 	if err != nil {
-		log.Println(err, "000000000000000")
-		return []entity.Activity{}, err
+		return 0, err
 	}
 
-	var result []entity.Activity
-	// result[0]. = "Updated!"
-
-	return result, err
+	return result.ModifiedCount, err
 }

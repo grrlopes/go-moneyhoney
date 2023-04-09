@@ -1,7 +1,6 @@
 package update
 
 import (
-	"log"
 	"time"
 
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
@@ -19,24 +18,25 @@ func NewUpdate(repo repository.IMongoRepo) InputBoundary {
 
 }
 
-func (e execute) Execute(data *entity.Activity) ([]entity.Activity, error) {
+func (e execute) Execute(data *entity.Activity) (map[string]interface{}, error) {
+	var status string = "Data was updated!"
 	data.UpdatedAt = time.Now()
 	id := data.ID
-
-	parseData := map[string]interface{}{
-		"author":     data.User,
-		"item":       data.Item,
-		"created_at": data.CreatedAt,
-		"updated_at": data.UpdatedAt,
-	}
-
-  log.Println(parseData)
 
 	result, err := e.findRepository.Update(id, data)
 
 	if err != nil {
-		return []entity.Activity{}, err
+		return map[string]interface{}{}, err
 	}
 
-	return result, nil
+	parseResult := map[string]interface{}{
+		"message": &status,
+	}
+
+	if result <= 0 {
+		status = "Data was not updated!"
+		return parseResult, err
+	}
+
+	return parseResult, nil
 }

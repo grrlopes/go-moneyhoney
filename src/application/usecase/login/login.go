@@ -2,7 +2,6 @@ package login
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
 	"github.com/grrlopes/go-moneyhoney/src/domain/repository"
@@ -26,7 +25,6 @@ func (e execute) Execute(data *entity.Users) (OutputBoundary, error) {
 		return OutputBoundary{}, errors.New("Incorrect username or password.")
 	}
 
-	fmt.Println(err, "dsfsdfds")
 	err = helper.ValidPassword(data, result.Password)
 	if err != nil {
 		return OutputBoundary{}, errors.New("Incorrect username or password.")

@@ -118,13 +118,10 @@ func Update() gin.HandlerFunc {
 		result, err := usecaseUpdate.Execute(&payload)
 
 		if err != nil {
-			error := presenters.MoneyError(result)
-			c.JSON(http.StatusInternalServerError, error)
+			c.JSON(http.StatusInternalServerError, err)
 			return
 		}
 
-		data := presenters.MoneySuccess(result, entity.Count{})
-
-		c.JSON(http.StatusOK, data)
+		c.JSON(http.StatusOK, result)
 	}
 }
