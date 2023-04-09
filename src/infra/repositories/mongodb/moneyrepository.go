@@ -2,7 +2,6 @@ package mongodb
 
 import (
 	"context"
-	"errors"
 	"log"
 
 	"github.com/grrlopes/go-moneyhoney/src/domain/entity"
@@ -148,5 +147,34 @@ func (db *money) FindById(Id *entity.ById) ([]entity.Activity, error) {
 }
 
 func (db *money) Update(id primitive.ObjectID, data *entity.Activity) ([]entity.Activity, error) {
-	return []entity.Activity{}, errors.New("")
+	_id := bson.D{{Key: "_id", Value: id}}
+	pipeline := bson.D{
+		{
+			Key: "item", Value: bson.D{
+				{
+					Key: "name", Value: data.Item.Name,
+				},
+				{
+					Key: "description", Value: data.Item.Description,
+				},
+				{
+					Key: "amount", Value: data.Item.Amount,
+				},
+			},
+		},
+		{
+			Key: "updated_at", Value: data.UpdatedAt,
+		},
+	}
+
+	_, err := db.con.UpdateOne(context.TODO(), _id, pipeline)
+	if err != nil {
+		log.Println(err, "000000000000000")
+		return []entity.Activity{}, err
+	}
+
+	var result []entity.Activity
+	// result[0]. = "Updated!"
+
+	return result, err
 }
